@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>APP_SBIK</title>
     <style>
-        /* 1. 全体の背景を白ではなく「紺色」にする */
+        /* 背景色を #020617 に完全固定 */
         html, body { 
             margin: 0; 
             padding: 0; 
-            background: #020617 !important; /* アプリのテーマカラー：濃い青（紺色） */
+            background-color: #020617 !important; 
             overflow: hidden; 
             height: 100vh; 
             width: 100vw;
@@ -18,24 +18,38 @@
             align-items: center;
         }
 
-        /* 2. 読み込み中に中央に表示されるアプリ名の設定 */
+        /* 読み込み中の文字：最前面（z-index: 100）に配置 */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* iframeより前に出す */
+            transition: opacity 0.5s ease-out; /* 消える時のアニメーション */
+            pointer-events: none; /* 下のiframeの操作を邪魔しない */
+        }
+
         .loading-text {
-            color: #00e676; /* 文字色はAIグリーン */
+            color: #00e676; /* AIグリーン */
             font-family: sans-serif;
-            font-size: 20px; /* 少し大きめに */
-            font-weight: bold; /* 太字で強調 */
-            letter-spacing: 3px; /* 文字間隔を広げてアプリっぽく */
-            z-index: 1; /* iframeの下に配置 */
-            animation: pulse 1.5s infinite; /* ふわふわ光らせる */
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-            0% { opacity: 0.5; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.5; transform: scale(0.95); }
+            0% { opacity: 0.4; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.4; transform: scale(0.98); }
         }
 
-        /* 3. GASの画面を表示するiframeの設定 */
+        /* iframe：文字の後ろでこっそり読み込む */
         iframe { 
             position: absolute; 
             top: 0; 
@@ -43,17 +57,34 @@
             width: 100%; 
             height: 100%; 
             border: none;
-            z-index: 10; /* 読み込まれたら上に被さる */
-            background: transparent; /* 背景を透過させて下の紺色を見せる */
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <div class="loading-text">APP_SBIK</div>
+
+    <div id="loading-screen">
+        <div class="loading-text">APP_SBIK</div>
+    </div>
 
     <iframe 
+        id="gas-app"
         src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
-        allow="geolocation; camera; microphone; autoplay">
-    </iframe>
+        allow="geolocation; camera; microphone; autoplay"
+        onload="hideLoader()"> </iframe>
+
+    <script>
+        function hideLoader() {
+            // iframeの読み込みが終わったら、文字をふわっと消す
+            const loader = document.getElementById('loading-screen');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        }
+
+        // 万が一読み込みが遅すぎても、10秒後には強制的に文字を消す（保険）
+        setTimeout(hideLoader, 10000);
+    </script>
 </body>
 </html>
