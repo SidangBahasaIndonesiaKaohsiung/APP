@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>APP_SBIK</title>
     <style>
-        /* 背景色を #020617 に固定 */
+        /* ローダーが回っている時の「あの背景色」 */
         html, body { 
             margin: 0; 
             padding: 0; 
-            background: #020617; 
+            background-color: #020617 !important; 
             overflow: hidden; 
             height: 100vh; 
             width: 100vw;
         }
 
-        /* iframeを画面いっぱいに表示 */
+        /* iframe自体の背景も統一して、読み込み中の白浮きを完全に防ぐ */
         iframe { 
             position: absolute; 
             top: 0; 
@@ -23,7 +23,7 @@
             width: 100%; 
             height: 100%; 
             border: none;
-            background: transparent;
+            background-color: #020617 !important;
         }
     </style>
 </head>
