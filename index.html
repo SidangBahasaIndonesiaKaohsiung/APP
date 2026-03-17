@@ -4,33 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>APP_SBIK</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root { --ai-color: #00e676; }
-        body { margin: 0; padding: 0; background: #020617; overflow: hidden; height: 100vh; }
+        /* 背景を最初から真っ黒に固定 */
+        html, body { margin: 0; padding: 0; background: #020617 !important; overflow: hidden; height: 100vh; width: 100vw; }
 
-        /* 1. AIローダーのスタイル（移植版） */
-        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.8s; }
-        .loader-container { position: relative; width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; }
-        .scan-line { position: absolute; width: 100%; height: 20px; background: linear-gradient(to bottom, transparent, var(--ai-color), transparent); opacity: 0.3; left: 0; z-index: 10; animation: scan-move 2s linear infinite; }
+        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.5s; }
+        .loader-container { position: relative; width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; }
+        .scan-line { position: absolute; width: 100%; height: 20px; background: linear-gradient(to bottom, transparent, var(--ai-color), transparent); opacity: 0.3; animation: scan-move 2s linear infinite; }
         .ring-outer { position: absolute; width: 100%; height: 100%; border: 1.5px dashed var(--ai-color); border-radius: 50%; opacity: 0.2; animation: rotate-ccw 5s linear infinite; }
         .ring-mid { position: absolute; width: 80%; height: 80%; border: 3px solid transparent; border-top: 3px solid var(--ai-color); border-bottom: 3px solid var(--ai-color); border-radius: 50%; opacity: 0.6; animation: rotate-cw 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         .ring-inner { position: absolute; width: 50%; height: 50%; border: 1px solid var(--ai-color); opacity: 0.3; border-radius: 50%; animation: rotate-ccw 1.5s linear infinite; }
-        .ring-inner::after { content: ""; position: absolute; top: 0; left: 50%; width: 6px; height: 6px; background: var(--ai-color); border-radius: 50%; box-shadow: 0 0 10px var(--ai-color); }
         .core-sphere { width: 18px; height: 18px; background: var(--ai-color); border-radius: 50%; box-shadow: 0 0 20px var(--ai-color); animation: pulse-glow 1s ease-in-out infinite; }
         @keyframes rotate-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rotate-ccw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
         @keyframes pulse-glow { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
-        @keyframes scan-move { 0% { transform: translateY(-100px); } 100% { transform: translateY(100px); } }
+        @keyframes scan-move { 0% { transform: translateY(-80px); } 100% { transform: translateY(80px); } }
 
-        /* 2. iframeのスタイル */
+        /* ★ここが重要：最初は display: none で存在自体を消しておく */
         #app-frame {
+            display: none;
             width: 100%;
             height: 100vh;
             border: none;
-            background: #020617; /* 読み込み中も黒く保つ */
-            opacity: 0; /* 最初は隠しておく */
-            transition: opacity 0.5s;
+            background: #020617;
         }
     </style>
 </head>
@@ -49,26 +46,28 @@
 <iframe id="app-frame" 
         src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
         allow="geolocation *; camera *; microphone *; autoplay *"
-        onload="hideParentLoader()"> </iframe>
+        onload="hideParentLoader()">
+</iframe>
 
 <script>
-    // ランダムなネオンカラーを設定（アプリ側と同じ仕様）
     const neonColors = ['#00e676', '#00b0ff', '#d500f9', '#ffea00', '#ff3d00', '#00ffff', '#ff0055'];
     document.documentElement.style.setProperty('--ai-color', neonColors[Math.floor(Math.random() * neonColors.length)]);
 
-    // GASの読み込みが完了したらローダーを消す
     function hideParentLoader() {
         const loader = document.getElementById('loading');
         const frame = document.getElementById('app-frame');
         
-        loader.style.opacity = '0';
-        frame.style.opacity = '1'; // アプリをふわっと表示
+        // 1. まず iframe を表示する（この時点では GAS 側の準備ができている）
+        frame.style.display = 'block';
         
+        // 2. その後、ローダーをフェードアウトさせる
         setTimeout(() => {
-            loader.style.display = 'none';
-        }, 800);
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        }, 100);
     }
 </script>
-
 </body>
 </html>
