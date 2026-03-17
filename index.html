@@ -6,7 +6,7 @@
     <title>APP_SBIK</title>
     <style>
         :root { --ai-color: #00e676; }
-        /* 背景を最初から暗い色に固定 */
+        /* 背景色をアプリの色に合わせ、iPhoneの白画面を完全に封鎖 */
         html, body { margin: 0; padding: 0; background: #020617 !important; overflow: hidden; height: 100vh; width: 100vw; }
 
         #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.4s; }
@@ -21,7 +21,7 @@
         @keyframes pulse-glow { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes scan-move { 0% { transform: translateY(-80px); } 100% { transform: translateY(80px); } }
 
-        /* 透明にして待機。白画面（デフォルト背景）を封じる */
+        /* ポイント：opacity 0.01 にすることで Safari に「表示中」と思わせ、処理を止めさせない */
         #app-frame {
             position: absolute;
             top: 0;
@@ -30,8 +30,8 @@
             height: 100vh;
             border: none;
             background: #020617;
-            opacity: 0;
-            transition: opacity 0.3s ease-in;
+            opacity: 0.01;
+            transition: opacity 0.4s ease-in;
         }
     </style>
 </head>
@@ -54,6 +54,7 @@
 </iframe>
 
 <script>
+    // ネオンカラーをランダム設定
     const neonColors = ['#00e676', '#00b0ff', '#d500f9', '#ffea00', '#ff3d00', '#00ffff', '#ff0055'];
     document.documentElement.style.setProperty('--ai-color', neonColors[Math.floor(Math.random() * neonColors.length)]);
 
@@ -63,17 +64,24 @@
     function showApp() {
         if (loader.style.display === 'none') return;
         
-        frame.style.opacity = '1'; // 透明を解除して表示
+        frame.style.opacity = '1'; 
         loader.style.opacity = '0';
         
         setTimeout(() => {
             loader.style.display = 'none';
-        }, 400);
+        }, 500);
     }
 
-    // ★スマホの「位置情報許可待ち」によるフリーズを防止
-    // 1.2秒経ったら強制的にアプリを見せる
-    setTimeout(showApp, 1200);
+    // iPhone対策：ダイアログでフリーズする前に、最速で表示を確定させる
+    // 0.8秒という「絶妙に短い時間」で強制解除を予約します
+    window.addEventListener('load', () => {
+        setTimeout(showApp, 800); 
+    });
+
+    // バックアップ用（通常読み込み完了時）
+    function onIframeLoad() {
+        showApp();
+    }
 </script>
 </body>
 </html>
