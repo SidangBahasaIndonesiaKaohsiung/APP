@@ -6,22 +6,22 @@
     <title>APP_SBIK</title>
     <style>
         :root { --ai-color: #00e676; }
-        /* 背景色をアプリの色に合わせ、iPhoneの白画面を完全に封鎖 */
-        html, body { margin: 0; padding: 0; background: #020617 !important; overflow: hidden; height: 100vh; width: 100vw; }
+        html, body { margin: 0; padding: 0; background: #020617 !important; overflow: hidden; height: 100vh; }
 
-        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.4s; }
-        .loader-container { position: relative; width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; }
+        /* ローダーのフェードアウトを 0.2s（爆速）に短縮 */
+        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.2s; }
+        .loader-container { position: relative; width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; }
         .scan-line { position: absolute; width: 100%; height: 20px; background: linear-gradient(to bottom, transparent, var(--ai-color), transparent); opacity: 0.3; animation: scan-move 2s linear infinite; }
         .ring-outer { position: absolute; width: 100%; height: 100%; border: 1.5px dashed var(--ai-color); border-radius: 50%; opacity: 0.2; animation: rotate-ccw 5s linear infinite; }
-        .ring-mid { position: absolute; width: 80%; height: 80%; border: 3px solid transparent; border-top: 3px solid var(--ai-color); border-bottom: 3px solid var(--ai-color); border-radius: 50%; opacity: 0.6; animation: rotate-cw 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-        .ring-inner { position: absolute; width: 50%; height: 50%; border: 1px solid var(--ai-color); opacity: 0.3; border-radius: 50%; animation: rotate-ccw 1.5s linear infinite; }
-        .core-sphere { width: 18px; height: 18px; background: var(--ai-color); border-radius: 50%; box-shadow: 0 0 20px var(--ai-color); animation: pulse-glow 1s ease-in-out infinite; }
+        .ring-mid { position: absolute; width: 80%; height: 80%; border: 3px solid transparent; border-top: 2px solid var(--ai-color); border-bottom: 2px solid var(--ai-color); border-radius: 50%; opacity: 0.6; animation: rotate-cw 1.5s linear infinite; }
+        .core-sphere { width: 12px; height: 12px; background: var(--ai-color); border-radius: 50%; box-shadow: 0 0 15px var(--ai-color); animation: pulse-glow 1s infinite; }
+        
         @keyframes rotate-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes rotate-ccw { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-        @keyframes pulse-glow { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
-        @keyframes scan-move { 0% { transform: translateY(-80px); } 100% { transform: translateY(80px); } }
+        @keyframes pulse-glow { 0%, 100% { transform: scale(0.8); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes scan-move { 0% { transform: translateY(-60px); } 100% { transform: translateY(60px); } }
 
-        /* ポイント：opacity 0.01 にすることで Safari に「表示中」と思わせ、処理を止めさせない */
+        /* 最初から「透明に近い表示状態」にしておき、出現時の transition も最短に */
         #app-frame {
             position: absolute;
             top: 0;
@@ -31,7 +31,7 @@
             border: none;
             background: #020617;
             opacity: 0.01;
-            transition: opacity 0.4s ease-in;
+            transition: opacity 0.2s ease-out;
         }
     </style>
 </head>
@@ -42,7 +42,6 @@
         <div class="scan-line"></div>
         <div class="ring-outer"></div>
         <div class="ring-mid"></div>
-        <div class="ring-inner"></div>
         <div class="core-sphere"></div>
     </div>
 </div>
@@ -54,7 +53,6 @@
 </iframe>
 
 <script>
-    // ネオンカラーをランダム設定
     const neonColors = ['#00e676', '#00b0ff', '#d500f9', '#ffea00', '#ff3d00', '#00ffff', '#ff0055'];
     document.documentElement.style.setProperty('--ai-color', neonColors[Math.floor(Math.random() * neonColors.length)]);
 
@@ -63,25 +61,13 @@
 
     function showApp() {
         if (loader.style.display === 'none') return;
-        
         frame.style.opacity = '1'; 
         loader.style.opacity = '0';
-        
-        setTimeout(() => {
-            loader.style.display = 'none';
-        }, 500);
+        setTimeout(() => { loader.style.display = 'none'; }, 200);
     }
 
-    // iPhone対策：ダイアログでフリーズする前に、最速で表示を確定させる
-    // 0.8秒という「絶妙に短い時間」で強制解除を予約します
-    window.addEventListener('load', () => {
-        setTimeout(showApp, 800); 
-    });
-
-    // バックアップ用（通常読み込み完了時）
-    function onIframeLoad() {
-        showApp();
-    }
+    // iPhoneのフリーズを避けるための強制表示も 0.5秒（体感一瞬）に短縮
+    setTimeout(showApp, 500);
 </script>
 </body>
 </html>
