@@ -6,10 +6,10 @@
     <title>APP_SBIK</title>
     <style>
         :root { --ai-color: #00e676; }
-        /* 背景を最初から真っ黒に固定 */
+        /* 背景を最初から暗い色に固定 */
         html, body { margin: 0; padding: 0; background: #020617 !important; overflow: hidden; height: 100vh; width: 100vw; }
 
-        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.5s; }
+        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: opacity 0.4s; }
         .loader-container { position: relative; width: 160px; height: 160px; display: flex; justify-content: center; align-items: center; }
         .scan-line { position: absolute; width: 100%; height: 20px; background: linear-gradient(to bottom, transparent, var(--ai-color), transparent); opacity: 0.3; animation: scan-move 2s linear infinite; }
         .ring-outer { position: absolute; width: 100%; height: 100%; border: 1.5px dashed var(--ai-color); border-radius: 50%; opacity: 0.2; animation: rotate-ccw 5s linear infinite; }
@@ -21,13 +21,17 @@
         @keyframes pulse-glow { 0%, 100% { transform: scale(0.85); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes scan-move { 0% { transform: translateY(-80px); } 100% { transform: translateY(80px); } }
 
-        /* ★ここが重要：最初は display: none で存在自体を消しておく */
+        /* 透明にして待機。白画面（デフォルト背景）を封じる */
         #app-frame {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100vh;
             border: none;
             background: #020617;
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
         }
     </style>
 </head>
@@ -46,28 +50,30 @@
 <iframe id="app-frame" 
         src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
         allow="geolocation *; camera *; microphone *; autoplay *"
-        onload="hideParentLoader()">
+        onload="showApp()">
 </iframe>
 
 <script>
     const neonColors = ['#00e676', '#00b0ff', '#d500f9', '#ffea00', '#ff3d00', '#00ffff', '#ff0055'];
     document.documentElement.style.setProperty('--ai-color', neonColors[Math.floor(Math.random() * neonColors.length)]);
 
-    function hideParentLoader() {
-        const loader = document.getElementById('loading');
-        const frame = document.getElementById('app-frame');
+    const loader = document.getElementById('loading');
+    const frame = document.getElementById('app-frame');
+
+    function showApp() {
+        if (loader.style.display === 'none') return;
         
-        // 1. まず iframe を表示する（この時点では GAS 側の準備ができている）
-        frame.style.display = 'block';
+        frame.style.opacity = '1'; // 透明を解除して表示
+        loader.style.opacity = '0';
         
-        // 2. その後、ローダーをフェードアウトさせる
         setTimeout(() => {
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
-        }, 100);
+            loader.style.display = 'none';
+        }, 400);
     }
+
+    // ★スマホの「位置情報許可待ち」によるフリーズを防止
+    // 1.2秒経ったら強制的にアプリを見せる
+    setTimeout(showApp, 1200);
 </script>
 </body>
 </html>
