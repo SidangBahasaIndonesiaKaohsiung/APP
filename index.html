@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>APP_SBIK</title>
     <style>
-        /* ローダーと同じ #020617 を背景に設定 */
+        /* 背景色を #020617 に固定 */
         html, body { 
             margin: 0; 
             padding: 0; 
@@ -13,28 +13,9 @@
             overflow: hidden; 
             height: 100vh; 
             width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* 読み込み中の文字 */
-        .loading-text {
-            color: #00e676; /* ここをAIの緑色にするとより統一感が出ます */
-            font-family: sans-serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            z-index: 1;
-            animation: pulse 1.5s infinite;
-            font-weight: bold;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.3; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.3; transform: scale(0.95); }
-        }
-
+        /* iframeを画面いっぱいに表示 */
         iframe { 
             position: absolute; 
             top: 0; 
@@ -42,14 +23,11 @@
             width: 100%; 
             height: 100%; 
             border: none;
-            z-index: 10;
             background: transparent;
         }
     </style>
 </head>
 <body>
-    <div class="loading-text">LOADING...</div>
-
     <iframe 
         src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
         allow="geolocation; camera; microphone; autoplay">
