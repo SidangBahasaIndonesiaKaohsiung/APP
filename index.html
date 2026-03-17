@@ -19,23 +19,17 @@
         /* アプリを表示する窓（iframe） */
         #app-frame {
             width: 100%;
-            height: calc(100vh - 70px); /* 下のメニュー分を引く */
+            height: 100vh; /* 画面いっぱいに表示 */
             border: none;
             background: white;
         }
 
-        /* 下部ナビゲーションバー */
-       nav { 
-            display: none; /* これで黒いバーが消えます */
+        /* ナビゲーションは非表示 */
+        nav { 
+            display: none; 
         }
 
-        #app-frame {
-            width: 100%;
-            height: 100vh; /* 画面いっぱいにアプリを表示します */
-            border: none;
-        }
-
-        /* メニューボタン */
+        /* メニューボタン（非表示ですが構造は維持） */
         .nav-item { 
             color: #666; 
             text-align: center; 
@@ -48,7 +42,6 @@
             align-items: center;
         }
 
-        /* 選択されている時の色（ネオンブルー） */
         .nav-item.active { 
             color: #00f2ff; 
         }
@@ -59,7 +52,6 @@
             margin-bottom: 2px; 
         }
 
-        /* タップ時の反応 */
         .nav-item:active {
             opacity: 0.5;
             transform: scale(0.9);
@@ -70,7 +62,7 @@
 
 <iframe id="app-frame" 
         src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
-        allow="geolocation">
+        allow="geolocation *; camera *; microphone *; autoplay *">
 </iframe>
 
 <nav style="display: none;">
@@ -80,11 +72,8 @@
 
 <script>
     function switchApp(el, url) {
-        // 全てのメニューから「active」を消す
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        // クリックしたものに「active」をつける
-        el.classList.add('active');
-        // iframeのURLを書き換えて画面を切り替える
+        if(el) el.classList.add('active');
         document.getElementById('app-frame').src = url;
     }
 </script>
