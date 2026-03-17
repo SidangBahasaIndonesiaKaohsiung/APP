@@ -2,16 +2,70 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>APP_SBIK</title>
     <style>
-        html, body { margin: 0; padding: 0; background: #f0f2f5; overflow: hidden; height: 100vh; }
-        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        /* 画面全体の固定：スクロールを禁止してネイティブアプリ感を出す */
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            background: #1a237e; /* ヘッダー色に合わせると起動が自然 */
+            overflow: hidden; 
+            height: 100vh; 
+            width: 100vw;
+        }
+
+        /* iframeの制御 */
+        iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            /* iOS Safariでのスクロールの滑らかさを確保 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 読み込み中の背景 */
+        #loading-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1; /* iframeの下に配置 */
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
-            allow="geolocation *; camera *; microphone *; autoplay *">
+    <div id="loading-bg"></div>
+
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
+        allow="geolocation; camera; microphone; autoplay; clipboard-write"
+        sandbox="allow-forms allow-modals allow-popups allow-scripts allow-same-origin allow-top-navigation-by-user-activation"
+        importance="high">
     </iframe>
+
+    <script>
+        // iPhoneのSafariでアドレスバーなどが邪魔をしないよう調整
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 1);
+            }, 100);
+        });
+        
+        // ジェスチャーによるズームを禁止（操作性向上）
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+    </script>
 </body>
 </html>
