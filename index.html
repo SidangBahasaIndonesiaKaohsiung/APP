@@ -28,14 +28,15 @@
             z-index: 9999; /* 何があっても最前面 */
         }
 
-        .loading-text {
-            color: #00e676;
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
+      .loading-text {
+    color: #00e676;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    /* アニメーション時間は1.5sでOK */
+    animation: pulse 1.5s infinite ease-in-out;
+}
 
         @keyframes pulse {
             0%, 100% { opacity: 0.4; }
