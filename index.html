@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SBIK</title>
     
-    <link rel="icon" href="https://fonts.gstatic.com/s/i/materialiconsoutlined/menu_book/v6/24px.svg?color=white" type="image/svg+xml">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23FFFFFF%22><path d=%220 0h24v24H0z%22 fill=%22none%22/><path d=%2218 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z%22/></svg>">
     
     <style>
         html, body { 
@@ -17,7 +17,6 @@
             width: 100vw;
         }
 
-        /* 読み込み画面の設定 */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -76,13 +75,9 @@
 
     <script>
         const loader = document.getElementById('loading-screen');
-        
-        // アプリが読み込まれたらフェードアウト
         document.getElementById('gas-app').onload = function() {
             loader.classList.add('fade-out');
         };
-
-        // 3秒経ったら強制的にフェードアウト
         setTimeout(() => {
             loader.classList.add('fade-out');
         }, 3000);
