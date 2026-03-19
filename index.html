@@ -17,6 +17,7 @@
             width: 100vw;
         }
 
+        /* 読み込み画面の設定 */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -33,7 +34,7 @@
         .loading-text {
             color: #00e676;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-            font-size: 28px; /* 元のサイズに戻しました */
+            font-size: 28px;
             font-weight: bold;
             letter-spacing: 4px;
             animation: pulse 1.5s infinite ease-in-out;
@@ -75,9 +76,13 @@
 
     <script>
         const loader = document.getElementById('loading-screen');
+        
+        // アプリが読み込まれたらフェードアウト
         document.getElementById('gas-app').onload = function() {
             loader.classList.add('fade-out');
         };
+
+        // 3秒経ったら強制的にフェードアウト
         setTimeout(() => {
             loader.classList.add('fade-out');
         }, 3000);
