@@ -62,18 +62,20 @@
     const loader = document.getElementById('loading-screen');
     const iframe = document.getElementById('gas-app');
 
-    iframe.onload = () => {
+    function hideLoader() {
+        if (!loader || loader.classList.contains('fade-out')) return;
         loader.classList.add('fade-out');
-    };
+    }
+
+    iframe.onload = hideLoader;
 
     loader.addEventListener('transitionend', () => {
         if (loader.classList.contains('fade-out')) loader.remove();
     });
 
-    setTimeout(() => {
-        loader.classList.add('fade-out');
-    }, 5000);
+    setTimeout(hideLoader, 5000);
 </script>
+
 
 </body>
 </html>
