@@ -60,8 +60,12 @@
 
         // 1. iframe内のApps Scriptが読み込み完了したらロゴを消す
         iframe.onload = () => {
-            loader.classList.add('fade-out');
-        };
+    loader.classList.add('fade-out');
+};
+
+loader.addEventListener('transitionend', () => {
+    if (loader.classList.contains('fade-out')) loader.remove();
+});
 
         // 2. ネットワーク環境等で読み込みが遅い場合のセーフティ（5秒で強制非表示）
         setTimeout(() => {
