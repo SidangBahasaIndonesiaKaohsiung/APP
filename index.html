@@ -55,22 +55,21 @@
     </iframe>
 
     <script>
-        const loader = document.getElementById('loading-screen');
-        const iframe = document.getElementById('gas-app');
+    const loader = document.getElementById('loading-screen');
+    const iframe = document.getElementById('gas-app');
 
-        // 1. iframe内のApps Scriptが読み込み完了したらロゴを消す
-        iframe.onload = () => {
-    loader.classList.add('fade-out');
-};
+    iframe.onload = () => {
+        loader.classList.add('fade-out');
+    };
 
-loader.addEventListener('transitionend', () => {
-    if (loader.classList.contains('fade-out')) loader.remove();
-});
+    loader.addEventListener('transitionend', () => {
+        if (loader.classList.contains('fade-out')) loader.remove();
+    });
 
-        // 2. ネットワーク環境等で読み込みが遅い場合のセーフティ（5秒で強制非表示）
-        setTimeout(() => {
-            loader.classList.add('fade-out');
-        }, 5000);
-    </script>
+    setTimeout(() => {
+        loader.classList.add('fade-out');
+    }, 5000);
+</script>
+
 </body>
 </html>
