@@ -1,18 +1,86 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Page Unavailable</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SBIK</title>
+    
+    <style>
+        :root {
+            --bg-color: #020617;
+            --accent-color: #00e676;
+        }
+        html, body { 
+    margin: 0; padding: 0; background-color: var(--bg-color) !important; 
+    overflow: hidden; height: 100dvh; width: 100vw;
+}
+
+        
+        /* ローディング画面：Apps Script読み込み完了まで表示 */
+        #loading-screen {
+            position: fixed; inset: 0;
+            background-color: var(--bg-color); 
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 9999; transition: opacity 0.8s ease;
+            pointer-events: auto;
+        }
+
+        .loading-text {
+  color: #00e676;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 35px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(0, 230, 118, 0.35);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.2; }
+        }
+
+        iframe { 
+    position: absolute; top: 0; left: 0;
+    width: 100vw; height: 100dvh;
+    border: none; z-index: 1; 
+}
+
+
+        .fade-out { opacity: 0; }
+    </style>
 </head>
-<body style="text-align:center; font-family:sans-serif; margin-top:50px;">
-  <hr>
+<body>
+    <div id="loading-screen"><div class="loading-text">SBIK</div></div>
+    
+    <iframe id="gas-app"
+    title="SBIK App"
+    loading="eager"
+    referrerpolicy="no-referrer"
+    src="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec" 
+    allow="geolocation; camera; microphone; autoplay">
+</iframe>
 
-  <h3>暫時無法查看此頁面</h3>
-  <p>請前往：<a href="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec">點擊我</a></p>
 
-  <hr>
 
-  <h3>Halaman ini sedang tidak tersedia</h3>
-  <p>Silakan kunjungi: <a href="https://script.google.com/macros/s/AKfycbwWbSECz8Tm7581UzAkVHQJlNfR02UuTBVrVCPJtdklO1ep1LbOWN94XgDBLT3gethk2A/exec">Klik saya</a></p>
+    <script>
+    const loader = document.getElementById('loading-screen');
+    const iframe = document.getElementById('gas-app');
+
+    function hideLoader() {
+        if (!loader || loader.classList.contains('fade-out')) return;
+        loader.classList.add('fade-out');
+    }
+
+    iframe.onload = hideLoader;
+
+    loader.addEventListener('transitionend', () => {
+        if (loader.classList.contains('fade-out')) loader.remove();
+    });
+
+</script>
+
 
 </body>
 </html>
